@@ -11,23 +11,25 @@ Recipient Directory for Gravity Forms allows network administrators to define co
 ## Features
 
 - **Network-Level Administration**: Manage all site contacts from one central location
+- **Customizable Contact Roles**: Define up to 7 custom contact roles for your organization
 - **Site-Specific Contacts**: Define unique contact lists for each site in your network
 - **Gravity Forms Integration**: Seamless merge tag integration with Gravity Forms notifications
 - **Multiple Recipients**: Support for comma-separated email addresses
-- **Six Contact Types**: Pre-configured contact roles for common organizational needs
 
-## Contact Types
+## Custom Contact Roles
 
-The plugin provides six contact types with corresponding merge tags:
+The plugin allows network administrators to define up to 7 custom contact roles that fit your organization's structure. Each role consists of:
 
-| Contact Type | Merge Tag | Description |
-|-------------|-----------|-------------|
-| Senior Program Administrator | `{SPA}` | Program leadership contact |
-| Development/Fundraising | `{DEV}` | Fundraising and development team |
-| Marketing and Communications | `{MARCOMM}` | Marketing and communications team |
-| General | `{GEN}` | General inquiries contact |
-| Business Office | `{BIZ}` | Business and finance office |
-| Executive Director | `{ED}` | Executive leadership |
+- **Role Key**: A unique identifier (alphanumeric, uppercase) used in merge tags
+- **Role Label**: A descriptive name for the role
+- **Merge Tag**: Automatically generated as `{ROLE_KEY}`
+
+**Example Custom Roles:**
+- `HR` - Human Resources
+- `IT` - Information Technology  
+- `LEGAL` - Legal Department
+
+By default, the plugin includes six common roles, but these can be completely customized or replaced.
 
 ## Requirements
 
@@ -52,11 +54,18 @@ The plugin provides six contact types with corresponding merge tags:
 
 ## Usage
 
+### Defining Custom Roles
+
+1. Navigate to **Network Admin > Recipient Directory > Define Roles**
+2. Enter a unique **Role Key** (e.g., "HR") and **Role Label** (e.g., "Human Resources") for each role
+3. Add up to 7 roles as needed for your organization
+4. Click **Save Roles**
+
 ### Setting Up Contacts
 
 1. Navigate to **Network Admin > Recipient Directory**
 2. Select a site from the dropdown menu
-3. Enter email addresses for each contact type (comma-separated for multiple recipients)
+3. Enter email addresses for each custom role (comma-separated for multiple recipients)
 4. Click **Save Contacts**
 5. Repeat for each site in your network
 
@@ -66,23 +75,24 @@ The plugin provides six contact types with corresponding merge tags:
 2. Navigate to **Settings > Notifications**
 3. Click on a notification or create a new one
 4. In the "Send To" field, click the merge tags dropdown
-5. Select any of the contact types (Senior Program Administrator, Development/Fundraising, etc.)
-6. The merge tag (e.g., `{SPA}`) will be inserted and will resolve to the email address(es) you configured
+5. Select any of your custom contact roles
+6. The merge tag (e.g., `{HR}`) will be inserted and will resolve to the email address(es) you configured
 
 **Example:**
 ```
-To: {SPA}, {ED}
+To: {HR}, {IT}
 CC: {GEN}
 ```
 
-This will send the notification to the Senior Program Administrator and Executive Director, with a copy to the General contact.
+This will send the notification to the Human Resources and IT contacts, with a copy to the General contact.
 
 ## Configuration Storage
 
-Contact configurations are stored in WordPress network options with the following format:
-- Option name: `rdgf_contacts_{blog_id}`
+Contact configurations are stored in WordPress network options:
+
+- **Custom Roles**: `rdgf_custom_roles` - Serialized array of role keys and labels
+- **Site Contacts**: `rdgf_contacts_{blog_id}` - Serialized array of contact emails for each site
 - Storage: Network-wide options table
-- Data format: Serialized array of contact types and email addresses
 
 ## Development
 
