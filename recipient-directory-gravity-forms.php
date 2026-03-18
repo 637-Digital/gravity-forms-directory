@@ -57,12 +57,12 @@ class Recipient_Director_GF {
         if (empty($roles)) {
             // Default roles if none set
             $roles = array(
-                'SPA' => 'Senior Program Administrator',
-                'DEV' => 'Development/Fundraising',
-                'MARCOMM' => 'Marketing and Communications',
-                'GEN' => 'General',
-                'BIZ' => 'Business Office',
-                'ED' => 'Executive Director'
+                'CEO' => 'Chief Executive Officer',
+                'CFO' => 'Chief Financial Officer',
+                'CTO' => 'Chief Technology Officer',
+                'CMO' => 'Chief Marketing Officer',
+                'CRO' => 'Chief Revenue Officer',
+                'BIZ' => 'Business Director'
             );
         }
         $this->contact_types = $roles;
@@ -131,6 +131,9 @@ class Recipient_Director_GF {
             wp_die(__('You do not have sufficient permissions to access this page.'));
         }
         
+        // Reload to ensure we have latest roles
+        $this->load_contact_types();
+        
         $roles = get_network_option(null, 'rdgf_custom_roles', array());
         
         ?>
@@ -155,10 +158,11 @@ class Recipient_Director_GF {
                             ?>
                             <tr class="rdgf-role-row">
                                 <td>
-                                    <input type="text" class="rdgf-role-key" value="<?php echo esc_attr($key); ?>" maxlength="10" placeholder="e.g., SPA">
+                                    <input type="text" class="rdgf-role-key" value="<?php echo esc_attr($key); ?>" maxlength="10" placeholder="e.g., CEO">
                                 </td>
                                 <td>
-                                    <input type="text" class="rdgf-role-label large-text" value="<?php echo esc_attr($label); ?>" placeholder="e.g., Senior Program Administrator">
+                                    <input type="text" class="rdgf-role-label large-text" value="<?php echo esc_attr($label); ?>" placeholder="e.g.,  Chief Executive Officer
+                                    ">
                                 </td>
                                 <td>
                                     <code class="rdgf-merge-tag">{<?php echo esc_attr($key); ?>}</code>
@@ -170,10 +174,10 @@ class Recipient_Director_GF {
                             ?>
                             <tr class="rdgf-role-row">
                                 <td>
-                                    <input type="text" class="rdgf-role-key" maxlength="10" placeholder="e.g., SPA">
+                                    <input type="text" class="rdgf-role-key" maxlength="10" placeholder="e.g., CEO">
                                 </td>
                                 <td>
-                                    <input type="text" class="rdgf-role-label large-text" placeholder="e.g., Senior Program Administrator">
+                                    <input type="text" class="rdgf-role-label large-text" placeholder="e.g., Chief Executive Officer">
                                 </td>
                                 <td>
                                     <code class="rdgf-merge-tag">{ }</code>
@@ -306,6 +310,9 @@ class Recipient_Director_GF {
         if (!current_user_can('manage_network_options')) {
             wp_die(__('You do not have sufficient permissions to access this page.'));
         }
+        
+        // Reload to ensure we have latest roles
+        $this->load_contact_types();
         
         // Get all sites in the network
         $sites = get_sites(array('number' => 10000));
@@ -589,6 +596,9 @@ class Recipient_Director_GF {
      * Add custom merge tags to Gravity Forms
      */
     public function add_custom_merge_tags($merge_tags, $form_id, $fields, $element_id) {
+        // Reload to ensure we have latest roles
+        $this->load_contact_types();
+        
         foreach ($this->contact_types as $key => $label) {
             $merge_tags[] = array(
                 'label' => $label,
@@ -602,6 +612,9 @@ class Recipient_Director_GF {
      * Replace merge tags with actual email addresses
      */
     public function replace_merge_tags($text, $form, $entry, $url_encode, $esc_html, $nl2br, $format) {
+        // Reload to ensure we have latest roles
+        $this->load_contact_types();
+        
         // Get current site ID
         $site_id = get_current_blog_id();
         
